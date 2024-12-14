@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+		<div>
+			<img th:src="@{/images/user.png}" id="imgIconeUsuario">
+			<h1>Login</h1>
+			<form class="form" method="post" th:action="@{/login}">
+				<fieldset>
+					<label for="username">E-mail:</label></br>
+					<input type="text" name="username" placeholder="E-mail..."/> </br>
+					<label for="password">Senha:</label></br>
+					<input type="password" name="password" placeholder="Senha..."/> </br>
+					<input type="submit" value="Entrar"/>
+				</fieldset>
+			</form>
+			<div>
+				<a th:href="@{/public/recuperar-senha}">
+					<span>Esqueci minha senha</span>
+				</a>
+			</div>
+			
+			<div id="mensagemDeSucesso" th:if="${msg != null}">
+				<span th:text="${msg}"></span>
+			</div>
+			<div id="mensagemErro" th:if="${msgErro != null}">
+				<span th:text="${msgErro}"></span>
+			</div>
+			
+			<span>Se já tem pré-cadastro, clique no botão abaixo.</span>
+			<form method="get" th:action="@{/public/aluno/novo}">
+				<input type="submit" value="Criar conta"/>
+			</form>
+		</div>
+	</div>	
+</body>
+</html>

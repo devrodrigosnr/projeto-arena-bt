@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+
+		<div class="container">
+			<h1>Planos</h1>
+
+			<div id="mensagemDeSucesso" th:if="${msg != null}">
+				<span th:text="${msg}"></span>
+			</div>
+			<script>
+				// Selecionar o elemento da mensagem de erro
+				var mensagemSucesso = document
+						.getElementById('mensagemDeSucesso');
+
+				// Verificar se o elemento existe
+				if (mensagemSucesso) {
+					// Remover a mensagem de erro após 4 segundos
+					setTimeout(
+							function() {
+								mensagemSucesso.parentNode
+										.removeChild(mensagemSucesso);
+							}, 4000); // Tempo em milissegundos (4 segundos)
+				}
+			</script>
+
+			<a th:href="@{/professor/cadastrar/planos}" class="button">Cadastrar
+				Plano</a>
+
+			<table style="display: flex; justify-content: center;" class="container table-responsive table thead-dark">
+				<tr>
+					<th>Plano</th>
+					<th>Valor</th>
+					<th>Frequencia Máxima</th>
+					<th>Tipo do Plano</th>
+					<th>Data de Vencimento</th>
+				</tr>
+				<tr th:each="plano : ${planos}">
+					<td><a
+						th:href="@{/professor/cadastro/plano/{id}(id=${plano.id})}"
+						th:text="${plano.nome}"></a></td>
+					<td><span th:if="${plano != null}" th:text="${plano.valor}"></span>
+					</td>
+					<td><span th:if="${plano != null}"
+						th:text="${plano.frequenciaMaxima}"></span></td>
+					<td><span th:if="${plano != null}"
+						th:text="${plano.tipoPlano}"></span></td>
+					<td><span th:if="${plano != null}"
+						th:text="${plano.dataVencimento}"></span></td>
+				</tr>
+			</table>
+
+			<!--Rodapé - Início-->
+			<footer th:insert="~{footer-vazia :: footer}"></footer>
+		</div>
+	</div>
+</body>
+
+</html>

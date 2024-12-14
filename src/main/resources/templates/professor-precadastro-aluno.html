@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+		<div>
+			<br>
+			<div class="container">
+				<h1>Pré-Cadastro de Aluno</h1>
+
+				<div id="mensagemDeSucesso" th:if="${msg != null}">
+					<span th:text="${msg}"></span>
+				</div>
+				</br>
+
+				<form method="post" th:object="${aluno}"
+					th:action="${!modoEdicao} ? @{/professor/preCadastro/salvar} : @{/professor/preCadastro/salvar}">
+					<fieldset>
+						<input type="hidden" th:field="*{id}" /> <label for="nome">Nome
+							do Aluno:</label></br> <input type="text" id="nome" name="nome"
+							placeholder="Digite o nome..." th:field="*{nome}"
+							th:classappend="${#fields.hasErrors('nome')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('nome')}">
+							<span th:errors="*{nome}"></span>
+						</div>
+
+						<label for="email">E-mail:</label></br> <input type="email" id="email"
+							name="email" placeholder="Digite o e-mail..." th:field="*{email}"
+							th:classappend="${#fields.hasErrors('email')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('email')}">
+							<span th:errors="*{email}"></span>
+						</div>
+
+						<label for="dataNascimento">Data de Nascimento:</label></br> <input
+							type="date" id="dataNascimento" name="dataNascimento"
+							th:field="*{dataNascimento}"
+							th:classappend="${#fields.hasErrors('dataNascimento')} ? 'inputError' : ''" /></br>
+						</br> <input type="submit"
+							th:value="${!modoEdicao} ? 'Cadastrar' : 'Alterar'" />
+					</fieldset>
+				</form>
+				<br />
+				<!--Rodapé - Início-->
+				<footer th:insert="~{footer-vazia :: footer}"></footer>
+			</div>
+		</div>
+</body>
+</html>

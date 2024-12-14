@@ -1,0 +1,29 @@
+<nav style="top: 0; width: 100%; background-color: #f8f9fa; z-index: 1000; display: flex; justify-content: center;">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" href="/aluno/home">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/aluno/agendamento">Agendamento</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/aluno/editar">Cadastro</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/logout" onclick="location.href=this.getAttribute('href');">Sair</a>
+        </li>
+    </ul>
+</nav>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var currentPage = window.location.pathname; // Obtém o caminho da URL atual
+        var navLinks = document.querySelectorAll('.nav-link'); // Seleciona todos os elementos com a classe 'nav-link'
+        // Itera sobre os links e adiciona a classe 'active' ao link correspondente à página atual
+        navLinks.forEach(function(link) {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena P27</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+
+<body>
+
+    <header>
+        <div id="divLogoApp">
+            <a href="professorHome.html">
+                <img src="images/p27_logo.png" id="imgLogoApp">
+            </a>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div>
+            Olá, Luis!
+        </div>
+    </header>
+
+    </br></br>
+    <!--Cabeçalho - Fim -->
+    <div class="container">
+    <label for="datepicker">Selecione uma data:</label>
+    <input type="text" id="datepicker">
+    <br /><br />
+
+        <div id="adicionarAulaContainer">
+            <a href="#" class="button" id="btnAdicionarAula">Adicionar aula</a>
+        </div>
+        <br />
+
+        <div id="infoAulaContainer" style="display: none;">
+            <div class="card">
+                <div class="card-content">
+                    <input type="time" id="horario" placeholder="Horário da Aula"><br />
+                    <select id="professor">
+                        <option value="">Selecione um professor</option>
+                        <option>Luís</option>
+                        <option>Paulo</option>
+                    </select>
+                    <input type="text" id="vagas" placeholder="Vagas"><br />
+                    <input type="text" id="duracao" placeholder="Duração da aula em minutos"><br />
+                    <button id="btnSalvarAula" class="button">Salvar</button>
+                    <button id="btnCancelar" class="button">Cancelar</button><br />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            // Configuração de localização para o português
+            $.datepicker.setDefaults($.datepicker.regional['pt-BR']);
+
+            $("#datepicker").datepicker({
+                dateFormat: 'dd/mm/yy', // Formato de data
+                onSelect: function (dateText, inst) {
+                    // Quando uma data é selecionada, faça a requisição ao backend
+                    var selectedDate = $(this).datepicker('getDate');
+                    consultarAulasDisponiveis(selectedDate);
+                }
+            });
+
+            //Botão adicionar aula e salvar
+            $("#btnAdicionarAula").click(function () {
+                $("#infoAulaContainer").show();
+            });
+
+            $("#btnCancelar").click(function () {
+                // Ocultar o container infoAulaContainer
+                $("#infoAulaContainer").hide();
+
+                // Limpar os campos de entrada
+                $("#horario").val("");
+                $("#professor").val("");
+            });
+
+            $("#btnSalvarAula").click(function () {
+                // Coletar os dados inseridos pelo usuário
+                var horario = $("#horario").val();
+                var professor = $("#professor").val();
+                var vagas = $("#vagas").val();
+                var duracao = $("#duracao").val();
+
+                // Ocultar o container infoAulaContainer
+                $("#infoAulaContainer").hide();
+
+                // Limpar os campos de entrada
+                $("#horario").val("");
+                $("#professor").val("");
+                $("#vagas").val("");
+                $("#duracao").val("");
+
+                // Construir a div com os dados da aula
+                var novaAulaHTML = `
+            <a href="professorEditarAula.html">
+                <div class="card">
+                    <div class="card-content">
+                        <h3>${horario}</h3>
+                        <p>Professor: ${professor}</p>
+                        <p>Vagas: ${vagas}</p>
+                        <p>Duração: ${duracao}</p>
+                        <a href="#" class="button">Cancelar aula</a>
+                        <a href="#" class="button">Agendar reposição</a>
+                    </div>
+                </div>
+            </a>
+        `;
+
+                // Adicionar a nova div com os dados da aula logo abaixo do container infoAulaContainer
+                $("#infoAulaContainer").after(novaAulaHTML);
+            });
+
+
+
+
+            // Função para consultar as aulas disponíveis para a data selecionada
+            function consultarAulasDisponiveis(date) {
+                $.ajax({
+                    url: '/consultarAulasDisponiveis', // Endpoint do backend
+                    type: 'GET',
+                    data: {
+                        date: date.toISOString() // Envie a data no formato ISO8601 para o backend
+                    },
+                    success: function (response) {
+                        // Manipule a resposta do backend aqui
+                        console.log(response);
+                    },
+                    error: function (xhr, status, error) {
+                        // Trate erros de requisição aqui
+                        console.error(xhr, status, error);
+                    }
+                });
+            }
+        });
+    </script>
+    <!--Rodapé - Início-->
+    <footer>
+        <!-- Seu conteúdo do footer aqui -->
+        <div id="divIconesFooter"></div>
+        <nav>
+            <ul>
+                <li><a href="professorHome.html"><img src="images/icone_home.png" alt="Início" id="imgIcones"></a></li>
+                <li><a href="professorPainelAulas.html"><img src="images/icone_calendario.png" alt="Aulas"
+                            id="imgIcones"></a></li>
+            </ul>
+        </nav>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+	
+	<div class="container">
+			<div>
+				<br>
+				<h1>Novo Pagamento</h1>
+
+				<div id="mensagemDeSucesso" th:if="${msg != null}">
+					<span th:text="${msg}"></span>
+				</div>
+				</br>
+
+				<div id="mensagemDeErro" th:if="${mensagemDeErro != null}">
+					<span th:text="${mensagemDeErro}"></span>
+				</div>
+				</br>
+
+				<form method="post" th:object="${pagamento}"
+					th:action="@{/professor/pagamento/aluno/salvar}">
+					<fieldset>
+						<input type="hidden" th:field="*{id}" /> 
+						<label for="dataPagamento">Data do Pagamento:</label></br> <input
+							type="date" id="dataPagamento" name="dataPagamento"
+							th:field="*{dataPagamento}"
+							th:classappend="${#fields.hasErrors('dataPagamento')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('dataPagamento')}">
+							<span th:errors="*{dataPagamento}"></span>
+						</div>
+						</br> <label for="valorPago">valor Pago:</label></br> <input type="text" id="valorPago"
+							name="valorPago" placeholder="Digite o valor pago..." th:field="*{valorPago}"
+							th:classappend="${#fields.hasErrors('valorPago')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('valorPago')}">
+							<span th:errors="*{valorPago}"></span>
+						</div>
+						</br> 
+
+						</br> 
+						<label for="dataPagamento">Pagamento referente ao vencimento/mês:</label></br> <input
+							type="date" id="referenciaMesPagamento" name="referenciaMesPagamento"
+							th:field="*{referenciaMesPagamento}"
+							th:classappend="${#fields.hasErrors('referenciaMesPagamento')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('referenciaMesPagamento')}">
+							<span th:errors="*{referenciaMesPagamento}"></span>
+						</div>
+
+						<div>
+							<label for="formaPagamento">Forma de Pagamento:</label><br/> 
+	                        <select id="formaPagamento" name="formaPagamento">
+								<option value="" selected>Selecione uma forma de pagamento</option>
+								<option th:each="formaPagamento : ${formaPagamentoList}" th:value="${formaPagamento}" th:text="${formaPagamento}"
+								th:selected="${pagamento.formaPagamento  != null and formaPagamento.toString() == pagamento.formaPagamento.toString()}"></option>
+							</select>
+						</div>
+						<input type="hidden" id="alunoId" name="alunoId" th:value="${aluno}" />
+						</br>
+						</br> <input type="submit"
+							th:value="Salvar" />
+					</fieldset>
+				</form>
+				<br />
+				<footer th:insert="~{footer-vazia :: footer}"></footer>
+
+			</div>
+		</div>
+	
+
+    <!--Rodapé - Início-->
+    <footer>
+        <!-- Seu conteúdo do footer aqui -->
+        <div id="divIconesFooter"></div>
+        </div>
+    </footer>
+</body>
+
+</html>

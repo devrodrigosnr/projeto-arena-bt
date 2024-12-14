@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+		<div class="container">
+			<div>
+				<br>
+				<h1>Cadastro de Planos</h1>
+
+				<div id="mensagemDeSucesso" th:if="${msg != null}">
+					<span th:text="${msg}"></span>
+				</div>
+				</br>
+
+				<div id="mensagemDeErro" th:if="${mensagemDeErro != null}">
+					<span th:text="${mensagemDeErro}"></span>
+				</div>
+				</br>
+
+				<form method="post" th:object="${plano}"
+					th:action="${!modoEdicao} ? @{/professor/plano/salvar} : @{/professor/plano/salvar}">
+					<fieldset>
+						<input type="hidden" th:field="*{id}" /> <label for="nome">Nome
+							do Plano:</label></br> <input type="text" id="nome" name="nome"
+							placeholder="Ex.: BT - 2X Por semana..." th:field="*{nome}"
+							th:classappend="${#fields.hasErrors('nome')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('nome')}">
+							<span th:errors="*{nome}"></span>
+						</div>
+						</br> <label for="valor">Valor Mensal:</label></br> <input type="text" id="valor"
+							name="valor" placeholder="Digite o valor do plano..." th:field="*{valor}"
+							th:classappend="${#fields.hasErrors('valor')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('valor')}">
+							<span th:errors="*{valor}"></span>
+						</div>
+						</br> <label for="frequenciaMaxima">Frequencia Máxima:</label></br> <input type="text" id="frequenciaMaxima"
+							name="frequenciaMaxima" placeholder="Digite a frequencia semanal máxima..." th:field="*{frequenciaMaxima}"
+							th:classappend="${#fields.hasErrors('frequenciaMaxima')} ? 'inputError' : ''" /></br>
+						</br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('frequenciaMaxima')}">
+							<span th:errors="*{frequenciaMaxima}"></span>
+						</div>
+						
+						<label for="dataVencimento">Data de Vencimento:</label></br> <input
+							type="text" id="dataVencimento" name="dataVencimento"
+							th:field="*{dataVencimento}"
+							th:classappend="${#fields.hasErrors('dataVencimento')} ? 'inputError' : ''" /></br>
+						
+						<div>
+						<label for="tipoPlano">Tipo Plano:</label><br/> 
+	                        <select id="tipoPlano" name="tipoPlano">
+								<option value="" selected>Selecione um plano</option>
+								<option th:each="tipo : ${tipoPlanos}" th:value="${tipo}" th:text="${tipo}" th:selected="${plano.tipoPlano  != null and tipo.toString() == plano.tipoPlano.toString()}"></option>
+							</select>
+						</div>
+
+						</br> <input type="submit"
+							th:value="${!modoEdicao} ? 'Cadastrar' : 'Alterar'" />
+					</fieldset>
+				</form>
+				<footer th:insert="~{footer-vazia :: footer}"></footer>
+				<br />
+			</div>
+		</div>
+</body>
+</html>

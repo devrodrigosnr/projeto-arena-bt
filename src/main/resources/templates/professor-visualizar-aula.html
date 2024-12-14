@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	</br>
+	
+	<div id="mensagemDeErro" th:if="${msgErro != null}">
+		<span th:text="${msgErro}"></span>
+	</div>
+	
+	<div id="mensagemDeSucesso" th:if="${msgSucesso != null}">
+		<span th:text="${msgSucesso}"></span>
+	</div>
+	
+	<script>
+		    $(document).ready(function() {
+		        $('.presenca-toggle').change(function() {
+		            var form = $(this).closest('form');
+		            var presencaValue = $(this).is(':checked') ? 'presente' : 'ausente';
+		            var data = {
+		                aulaId: form.find('[name="aulaId"]').val(),
+		                alunoId: form.find('[name="alunoId"]').val(),
+		                presenca: presencaValue
+		            };
+		            $.ajax({
+		                type: "POST",
+		                url: form.attr('action'),
+		                data: data,
+		                success: function(response) {
+		                    // Atualizar a interface do usuário conforme necessário
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error(xhr.responseText);
+		                    // Lidar com erros de forma apropriada
+		                }
+		            });
+		        });
+		    });
+		    
+		 // Selecionar o elemento da mensagem de erro
+		    var mensagemErro = document.getElementById('mensagemDeErro');
+
+		    // Verificar se o elemento existe
+		    if (mensagemErro) {
+		        // Remover a mensagem de erro após 4 segundos
+		        setTimeout(function() {
+		        	mensagemErro.parentNode.removeChild(mensagemErro);
+		        }, 4000); // Tempo em milissegundos (4 segundos)
+		    }
+		    
+		 // Selecionar o elemento da mensagem de erro
+		    var mensagemSucesso = document.getElementById('mensagemDeSucesso');
+
+		    // Verificar se o elemento existe
+		    if (mensagemSucesso) {
+		        // Remover a mensagem de erro após 4 segundos
+		        setTimeout(function() {
+		        	mensagemSucesso.parentNode.removeChild(mensagemSucesso);
+		        }, 4000); // Tempo em milissegundos (4 segundos)
+		    }
+		</script>
+		<!--Cabeçalho - Fim -->
+
+
+
+		</br> </br> </br>
+		<div class="container">
+			<div class="card">
+				<div class="card-content">
+					<h4 th:text="'Horário ' + ${aula.horario}"></h4>
+					<h4 th:text="'Professor: ' + ${aula.professor.nome}"></h4>
+					<h5 th:text="'Vagas: ' + ${aula.agendamentoXVagas}"></h5>
+					<h6 th:text="'Duração: ' + ${aula.duracao} + ' min'"></h6>
+					
+
+					
+					<form th:action="@{/aula/agendar-mensalista}" method="post">
+					<input type="hidden" name="aulaId" th:value="${aula.id}">
+					<select name="alunoId" class="form-select">
+					    <option value="">Selecione um aluno para adicionar</option>
+					    <option th:each="aluno : ${alunosDisponiveis}" th:value="${aluno.id}" th:text="${aluno.nome}"></option>
+					</select>
+					</br></br>
+						<button type="submit">Adicionar aluno</button>
+					</form>
+					</br>
+					
+					<table class="container">
+						<thead>
+							<tr>
+								<th>Aluno</th>
+								<th>Presença</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="aluno : ${alunosAgendados}">
+								<td th:text="${aluno.nome}"></td>
+								<td>
+
+									<form class="toggle-form"
+										th:action="@{/aula/confirmar-presenca}" method="post">
+										<input type="hidden" name="aulaId" th:value="${aula.id}">
+										<input type="hidden" name="alunoId" th:value="${aluno.id}">
+										<input type="hidden" name="presenca" class="presenca-value">
+										<!-- Toggle de presença -->
+										<label class="toggle-switch"><input type="checkbox"
+											class="presenca-toggle" th:checked="${aluno.isPresente}"><span
+											class="slider"></span> </label>
+									</form>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+
+
+					<form th:action="@{/aula/finalizar}" method="post">
+						<input type="hidden" name="aulaId" th:value="${aula.id}">
+						<button type="submit">Finalizar Aula</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		
+    <!--Rodapé - Início-->
+    <footer th:insert="~{footer-vazia :: footer}"></footer>
+	</div>
+</body>
+
+</html>

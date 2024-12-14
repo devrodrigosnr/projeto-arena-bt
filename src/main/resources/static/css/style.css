@@ -1,0 +1,287 @@
+*
+{
+    font-family: "Verdana";
+}
+
+body
+{
+    text-align: center;
+    margin: 0px;
+}
+
+div#divLogoApp
+{
+    background-color: rgb(65, 124, 189);
+    height: 90px;
+}
+
+img#imgIcones
+{
+    height: 80px;
+}
+
+img#iconeConfirmar
+{
+    height: 20px;
+}
+
+img#imgLogoApp
+{
+    height: 200%;
+}
+
+img#imgIconeUsuario
+{
+    width: 120px;
+}
+
+h1
+{
+    background-color: rgb(253, 181, 63);
+    color: aliceblue;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 10px solid rgb(65, 124, 189);
+    border-right: 10px solid rgb(65, 124, 189);
+    border-top: 2px solid rgb(65, 124, 189);
+    border-bottom: 2px solid rgb(65, 124, 189);
+    border-radius: 30px 30px 100px 100px;
+}
+
+div#mensagemErro
+{
+    background-color: #d40000;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    color: aliceblue;
+}
+
+div#mensagemSucesso
+{
+    background-color: green;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    color: aliceblue;
+}
+
+fieldset
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+}
+
+input
+{
+    border: 1px solid rgb(65, 124, 189);
+    margin-bottom: 6px;
+}
+
+footer{
+    background-color: rgb(65, 124, 189);
+    height: 90px;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    z-index: 1000;
+    bottom: 0;
+}
+
+footer nav {
+    position: fixed; /* Fixa a navegação no footer */
+    bottom: 0; /* Alinha a navegação ao final do footer */
+    left: 0;
+}
+
+footer nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex; /* Usando flexbox */
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    text-align: center; /* Centraliza o conteúdo dos elementos inline (como as imagens) */
+}
+
+footer nav ul li {
+    margin-right: 20px; /* Espaçamento entre os links */
+    display: inline; /* Torna os itens da lista em linha */
+}
+
+footer nav ul li:last-child {
+    margin-right: 0; /* Remove o espaçamento do último link */
+}
+
+footer nav ul li img {
+    width: 90px; /* Define a largura das imagens */
+    height: auto; /* Mantém a proporção da imagem */
+}
+
+div#divIconesFooter
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.card {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
+    background-color: rgb(129, 128, 128);
+}
+
+.cardnovo {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
+    background-color: green;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.card-content p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: auto;
+    padding-bottom: 100px; /* Adiciona espaço na parte inferior para evitar que os cards fiquem ocultos atrás do footer */
+}
+
+.numbered-list {
+    list-style-type: decimal;
+}
+
+.listaAlunosAgendados {
+    display: inline-block;
+    padding: 0px auto;
+}
+
+a {
+    text-decoration: none; /* Remove o sublinhado dos links */
+}
+
+div#mensagemDeErro {
+	background-color: #d40000;
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 10px;	
+	color: #ffffff;
+}
+
+div#mensagemDeSucesso {
+	background-color: green;
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 10px;	
+	color: #ffffff;
+}
+
+.inputError
+{
+ border: 2px solid #ff2828;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-switch input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff0000;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input[type="checkbox"]:checked + .slider {
+    background-color: #008000;
+}
+
+input[type="checkbox"]:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+th {
+    text-align: center;
+}
+
+button#adicionarAulaBtn{
+	margin-left: auto;
+    margin-right: auto;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}

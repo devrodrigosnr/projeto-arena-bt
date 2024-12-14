@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-professor}"></div>
+		<!--Cabeçalho - Fim -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<br /> <br />
+
+		<div class="container">
+			<h1>Adicionar Aula</h1>
+			<div>
+				<label for="data">Selecione uma data:</label> <input type="date"
+					id="data" name="data" onchange="dataSelecionada()">
+					<br /> <br />
+				<button id="adicionarAulaBtn" onclick="mostrarFormulario()"
+					style="display: none;">Adicionar Aula</button>
+			</div>
+			<div id="mensagemDeErro" th:if="${mensagemDeErro != null}">
+				<span th:text="${mensagemDeErro}"></span>
+			</div>
+
+			<div class="container" id="formulario" style="display: none;">
+
+				<div class="cardnovo">
+					<div class="card-content">
+						<form id="formAdicionarAula" th:action="@{/aula/salvar}"
+							th:object="${aula}" method="post">
+							<input type="hidden" id="dataHoraSelecionada"
+								name="dataHoraSelecionada">
+							<div>
+								<label for="professor">Professor:</label> <select id="professor"
+									name="professor">
+									<option value="" selected>Selecione um professor</option>
+									<option th:each="professor : ${professores}"
+										th:value="${professor.id}" th:text="${professor.nome}"></option>
+								</select>
+							</div>
+							<div>
+								<label for="horario">Horário:</label> <input type="time"
+									id="horario" name="horario">
+							</div>
+							<div>
+								<label for="vagas">Vagas:</label> <input type="number"
+									id="vagas" name="vagas">
+							</div>
+							<div>
+								<label for="duracao">Tempo de Aula:</label> <input type="text"
+									id="duracao" name="duracao">
+							</div>
+							<button type="button" onclick="salvarAula()">Salvar</button>
+							<button type="button" onclick="fecharFormulario()">Fechar</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<br /> <br />
+			<div id="formularioEdicao">
+				<!-- Iterar sobre as aulas e criar um formulário para cada aula -->
+				<div th:each="aula : ${aulas}">
+					<div class="card">
+						<div class="card-content">
+							<form action="#" th:action="@{/aula/editar}" th:object="${aula}"
+								method="post">
+								<!-- Campos do formulário para editar aula -->
+								<span th:if="${aulas.size() == 0}">Nenhuma aula
+									cadastrada para a data informada</span>
+								<div>
+									<input type="hidden" id="id" name="id" th:value="${aula.id}">
+								</div>
+								<div>
+									<label>Situação:</label>
+									<span th:text="${aula.situacao}"></span>
+								</div>
+								<div>
+									<label for="data">Data:</label><br /> <input type="date"
+										id="data" name="data" th:value="${aula.data}"></br> <label
+										for="horario">Horário:</label><br /> <input type="time"
+										id="horario" name="horario" th:value="${aula.horario}">
+								</div>
+								<div>
+									<label for="professor">Professor:</label><br /> <select
+										id="professor" name="professor">
+										<option value="" selected>Selecione um professor</option>
+										<option th:each="professor : ${professores}"
+											th:value="${professor.id}" th:text="${professor.nome}"
+											th:selected="${professor.id == aula.professor.id}"></option>
+									</select>
+								</div>
+								<div>
+									<label for="vagas">Vagas:</label> <br /> <input type="number"
+										id="vagas" name="vagas" th:value="${aula.vagas}">
+								</div>
+								<div>
+									<label for="duracao">Tempo de Aula:</label> <br /> <input
+										type="text" id="duracao" name="duracao"
+										th:value="${aula.duracao}">
+								</div>
+
+								<button type="submit">Reagendar</button>
+								<button type="button" class="liberar-aula" 
+									th:data-id="${aula.id}" onclick="liberarAula(this)"
+									th:if="${aula.situacao.name == 'CRIADA'}">Liberar</button>
+								<a
+									th:href="@{/aula/professor/visualizar-aula/{id}(id=${aula.id})}"
+									class="button">Visualizar Alunos Agendados</a> <br /> <br />
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="mensagemSucesso" style="display: none;"></div>
+
+			<script th:inline="javascript">
+				function liberarAula(button) {
+					var aulaId = $(button).data("id");
+
+					// Realize a requisição AJAX para o controlador
+					$.ajax({
+						url : "/aula/liberar",
+						type : "POST",
+						data : {
+							aulaId : aulaId
+						},
+						success : function(response) {
+							// Aqui você pode exibir uma mensagem de sucesso ou fazer qualquer outra coisa que desejar
+							exibirMensagemSucesso("Aula liberada com sucesso!");
+							buscarAulasPorData();
+						},
+						error : function(xhr, status, error) {
+							// Trate erros de requisição aqui
+							console.error(xhr, status, error);
+						}
+					});
+				}
+
+				// Função para mostrar o formulário de adicionar aula
+				function mostrarFormulario() {
+					var dataSelecionada = document.getElementById('data').value;
+					document.getElementById('dataHoraSelecionada').value = dataSelecionada;
+					document.getElementById('formulario').style.display = 'block';
+				}
+
+				// Função para fechar o formulário de adicionar aula
+				function fecharFormulario() {
+					document.getElementById('formulario').style.display = 'none';
+				}
+
+				// Função para salvar a aula via AJAX
+				function salvarAula() {
+					var formData = $("#formAdicionarAula").serialize();
+					$.ajax({
+						url : "/aula/salvar",
+						type : "POST",
+						data : formData,
+						success : function(response) {
+							// Atualizar a lista de aulas sem recarregar a página
+							buscarAulasPorData();
+							// Fechar o formulário
+							fecharFormulario();
+						},
+						error : function(xhr, status, error) {
+							// Trate erros de requisição aqui
+							console.error(xhr, status, error);
+						}
+					});
+				}
+
+				// Função para buscar as aulas quando a data é alterada
+				function dataSelecionada() {
+					buscarAulasPorData();
+				}
+
+				// Função para buscar as aulas disponíveis para a data selecionada
+				function buscarAulasPorData() {
+					var dataSelecionada = document.getElementById('data').value;
+
+					if (dataSelecionada) {
+						document.getElementById('adicionarAulaBtn').style.display = 'block';
+					} else {
+						document.getElementById('adicionarAulaBtn').style.display = 'none';
+					}
+					$
+							.ajax({
+								url : "/aula/professor/buscar",
+								type : "GET",
+								data : {
+									date : dataSelecionada
+								},
+								success : function(response) {
+									// Limpar o conteúdo existente da div
+									$("#formularioEdicao").empty();
+									// Substituir apenas a div formularioEdicao pelo conteúdo retornado pelo backend
+									var formularioEdicaoHtml = $(response)
+											.find("#formularioEdicao").html();
+									$("#formularioEdicao").append(
+											formularioEdicaoHtml);
+									// Exibir a div formularioEdicao
+									$("#formularioEdicao").show();
+								},
+								error : function(xhr, status, error) {
+									// Trate erros de requisição aqui
+									console.error(xhr, status, error);
+								}
+							});
+				}
+				
+				function exibirMensagemSucesso(mensagem) {
+	                var divSucesso = $("#mensagemSucesso");
+	                divSucesso.text(mensagem);
+	                divSucesso.show();
+
+	                setTimeout(function () {
+	                	divSucesso.text('');
+	                	divSucesso.hide();
+	                }, 3000); // 5000 milissegundos = 5 segundos
+	            }
+			</script>
+	<footer th:insert="~{footer-vazia :: footer}"></footer>
+			<!--Rodapé - Início-->
+	</div>
+</body>
+
+</html>

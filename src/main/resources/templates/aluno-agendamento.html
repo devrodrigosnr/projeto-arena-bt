@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<head>
+<!-- Seus scripts e estilos aqui -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="~{navbar-aluno}"></div>
+		<!-- Seu conteúdo aqui -->
+
+		</br> </br>
+		<div>
+			<label for="data">Selecione uma data:</label> <input type="date"
+				id="data" name="data" onchange="dataSelecionada()">
+		</div>
+		<br />
+		<br />
+		<div id="mensagemErro" style="display: none;"></div>
+		<div id="mensagemSucesso" style="display: none;"></div>
+		<div class="container">
+			<br />
+			<div id="infoAulaContainer" style="display: none;">
+				<!-- Aqui serão exibidas as aulas -->
+				<div th:each="aula : ${aulas}" class="card">
+					<div class="card-content">
+						<input type="hidden" id="id" name="id" th:value="${aula.id}">
+						<h3 th:text="${aula.horario}"></h3>
+						<p th:text="'Professor: ' + ${aula.professor.nome}"></p>
+						<p th:text="'Vagas: ' + ${aula.agendamentoXVagas}"></p>
+						<p th:text="'Duração: ' + ${aula.duracao}"></p>
+						
+						<div th:if="${aula.checkedIn}">
+							<a class="button" th:href="@{'#'}" th:data-id="${aula.id}"
+								onclick="desmarcarAula(this)">Desmarcar</a>
+						</div>
+						
+						<div th:if="${!aula.checkedIn and !aula.lotada}">
+							<a class="button" th:href="@{'#'}" th:data-id="${aula.id}"
+								onclick="checkinAula(this)">Checkin</a>
+						</div>
+						
+						<div th:if="${aula.sairFilaEspera}">
+                        	<a class="button" th:href="@{'#'}" onclick="sairDaFila(this)" th:data-id="${aula.id}">Sair da fila</a>
+                        	</br>
+                        	<span th:text="'Você está na posição ' + ${posicaoAluno} + ' na fila de espera.'"></span>
+                    	</div>
+                    	<div th:if="${aula.lotada and !aula.sairFilaEspera and !aula.checkedIn}">
+                    		<a class="button" th:href="@{'#'}" onclick="entrarNaFila(this)" th:data-id="${aula.id}">Entrar na fila</a>
+                		</div>
+						
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Variável global para armazenar a data selecionada
+			var selectedDate;
+
+			// Função para consultar as aulas disponíveis para a data selecionada
+			function buscarAulasPorData() {
+				var dataSelecionada = document.getElementById('data').value;
+				$.ajax({
+					url : '/aula/aluno/buscar',
+					type : 'GET',
+					data : {
+						date : dataSelecionada
+					},
+					success : function(response) {
+						$("#infoAulaContainer").replaceWith(
+								$(response).find("#infoAulaContainer"));
+						$("#infoAulaContainer").show(); // Exibir a div infoAulaContainer
+
+						// Atualizar a data selecionada globalmente
+						selectedDate = dataSelecionada;
+					},
+					error : function(xhr, status, error) {
+						console.error(xhr, status, error);
+					}
+				});
+			}
+
+			function checkinAula(button) {
+				var aulaId = button.getAttribute("data-id");
+
+				// Realizar a requisição AJAX para o controlador
+				$
+						.ajax({
+							url : "/aula/checkin",
+							type : "POST",
+							data : {
+								aulaId : aulaId
+							},
+							success : function(response) {
+								console.log("Check-in realizado com sucesso!");
+								exibirMensagemSucesso("Check-in realizado com sucesso!");
+								// Recarregar as aulas disponíveis para a data selecionada após o Checkin
+								buscarAulasPorData();
+							},
+							error : function(xhr, status, error) {
+								exibirMensagemErro(xhr.responseText);
+								console.error(xhr, status, error);
+							}
+						});
+			}
+
+			function desmarcarAula(button) {
+				var aulaId = $(button).data("id");
+
+				// Realizar a requisição AJAX para o controlador
+				$.ajax({
+					url : "/aula/desmarcar",
+					type : "POST",
+					data : {
+						aulaId : aulaId
+					},
+					success : function(response) {
+						exibirMensagemSucesso("Aula desmarcada com sucesso!");
+						buscarAulasPorData()
+					},
+					error : function(xhr, status, error) {
+						console.error(xhr, status, error);
+					}
+				});
+			}
+			
+			function entrarNaFila(button) {
+				var aulaId = button.getAttribute("data-id");
+
+				// Realizar a requisição AJAX para o controlador
+				$
+						.ajax({
+							url : "/aula/entrarNaFila",
+							type : "POST",
+							data : {
+								aulaId : aulaId
+							},
+							success : function(response) {
+								exibirMensagemSucesso("Você entrou na fila para esta aula");
+								buscarAulasPorData();
+							},
+							error : function(xhr, status, error) {
+								exibirMensagemErro(xhr.responseText);
+								console.error(xhr, status, error);
+							}
+						});
+			}
+			
+			function sairDaFila(button) {
+				var aulaId = button.getAttribute("data-id");
+
+				// Realizar a requisição AJAX para o controlador
+				$
+						.ajax({
+							url : "/aula/sairDaFila",
+							type : "POST",
+							data : {
+								aulaId : aulaId
+							},
+							success : function(response) {
+								exibirMensagemSucesso("Você saiu da fila para esta aula");
+								buscarAulasPorData();
+							},
+							error : function(xhr, status, error) {
+								exibirMensagemErro(xhr.responseText);
+								console.error(xhr, status, error);
+							}
+						});
+			}
+
+			// Função para exibir a mensagem de erro na tela
+			function exibirMensagemErro(mensagem) {
+				var divErro = $("#mensagemErro");
+				divErro.text(mensagem);
+				divErro.show();
+
+				setTimeout(function() {
+					divErro.text('');
+					divErro.hide();
+				}, 3000); // 5000 milissegundos = 5 segundos
+			}
+
+			// Função para exibir a mensagem de sucesso na tela
+			function exibirMensagemSucesso(mensagem) {
+				var divSucesso = $("#mensagemSucesso");
+				divSucesso.text(mensagem);
+				divSucesso.show();
+
+				setTimeout(function() {
+					divSucesso.text('');
+					divSucesso.hide();
+				}, 3000); // 5000 milissegundos = 5 segundos
+			}
+
+			// Função para buscar as aulas quando a data é alterada
+			function dataSelecionada() {
+				buscarAulasPorData();
+			}
+		</script>
+
+		<!--Rodapé - Início-->
+		<footer>
+			<!-- Seu conteúdo do footer aqui -->
+			<div id="divIconesFooter"></div>
+	</div>
+	</footer>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="~{navbar-professor}"></div>
+		<div class="container">
+
+		<a th:href="@{/professor/financeiro/novoPagamento/{id}(id=${aluno})}"
+			class="button">Novo Pagamento</a>
+
+		<table class="container table-responsive table thead-dark">
+			<tr>
+				<th>Histórico de Pagamentos Efetuados</th>
+			</tr>
+			<tr>
+				<th>Aluno</th>
+				<th>Mês de referência</th>
+				<th>Valor Pago</th>
+				<th>Data de Pagamento</th>
+				<th>Forma de Pagamento</th>
+			</tr>
+			<tr th:each="pagamento : ${pagamentos}">
+				<td th:text="${pagamento.aluno.nome}"></td>
+				<td th:text="${pagamento.dataReferenciaMesPagamentoFormatada}"></td>
+				<td th:text="${pagamento.valorPago}"></td>
+				<td th:text="${pagamento.dataPagamentoFormatada}"></td>
+				<td th:text="${pagamento.formaPagamento}"></td>
+			</tr>
+		</table>
+
+
+		<!--Rodapé - Início-->
+		<footer>
+			<!-- Seu conteúdo do footer aqui -->
+			<div id="divIconesFooter"></div>
+	</div>
+	</div>
+	</footer>
+</body>
+
+</html>

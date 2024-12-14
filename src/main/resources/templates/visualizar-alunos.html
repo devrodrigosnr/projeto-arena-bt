@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<body>
+	<div layout:fragment="content">
+		<div th:replace="~{navbar-professor}"></div>
+		<div class="container">
+
+		<h1>Alunos</h1>
+
+		<div id="mensagemDeSucesso" th:if="${msg != null}">
+			<span th:text="${msg}"></span>
+		</div>
+		<script>
+			// Selecionar o elemento da mensagem de erro
+			var mensagemSucesso = document.getElementById('mensagemDeSucesso');
+
+			// Verificar se o elemento existe
+			if (mensagemSucesso) {
+				// Remover a mensagem de erro após 4 segundos
+				setTimeout(function() {
+					mensagemSucesso.parentNode.removeChild(mensagemSucesso);
+				}, 4000); // Tempo em milissegundos (4 segundos)
+			}
+		</script>
+		<a th:href="@{/professor/preCadastro-aluno}" class="button">Pré-Cadastrar</a>
+		<a th:href="@{/professor/aluno-experimental-cadastro}" class="button">Cadastrar
+			Experimental</a>
+
+		<table id="mensalistasEGympass" class="container table-responsive table thead-dark">
+		<caption>Tabela de alunos mensalistas e gympass</caption>
+			<tr>
+				<th>Mensalistas e Gympass</th>
+			</tr>
+			<tr>
+				<th>Aluno</th>
+				<th>Plano</th>
+				<th>Tipo</th>
+				<th>Valor Plano</th>
+				<th>Situacao</th>
+				<th>Telefone</th>
+				<th>Data de Nascimento</th>
+				<th>Financeiro</th>
+			</tr>
+			<tr th:each="aluno : ${alunos}">
+				<td><a th:href="@{/professor/cadastro/aluno/{id}(id=${aluno.id})}"
+						th:text="${aluno.nome}"></a></td>
+				<td><span th:if="${aluno.plano != null}"
+					th:text="${aluno.plano.nome}"></span></td>
+				<td><span th:if="${aluno.plano != null}"
+					th:text="${aluno.plano.tipoPlano}"></span></td>
+				<td><span th:if="${aluno.plano != null}"
+					th:text="${aluno.plano.valor}"></span></td>
+				<td th:text="${aluno.situacaoAluno}"></td>
+				<td>
+					<a th:href="'http://api.whatsapp.com/send?1=pt_BR&amp;phone=' + ${aluno.telefone}" target="_blank" th:text="${aluno.telefone}"></a>
+				</td>
+				<td th:text="${aluno.dataNascimentoFormatada}"></td>
+				<td><a th:href="@{/professor/financeiro/aluno/{id}(id=${aluno.id})}">Ver</a></td>
+			</tr>
+		</table>
+		<span th:if="${alunos.size() == 0}">Nenhum aluno cadastrado</span>
+
+		<table class="container table-responsive table thead-dark">
+		<caption>Tabela de alunos experimentais</caption>
+			<tr>
+				<th>Aluno Experimental</th>
+			</tr>
+			<tr>
+				<th>Aluno</th>
+				<th>E-mail</th>
+				<th>Data de Nascimento</th>
+				<th>Situacao na Aula</th>
+			</tr>
+			<tr th:each="alunoExperimental : ${alunosExperimental}">
+				<td><a
+					th:href="@{/professor/cadastro/aluno/{id}(id=${alunoExperimental.id})}"
+					th:text="${alunoExperimental.nome}"></a></td>
+				<td th:text="${alunoExperimental.email}"></td>
+				<td th:text="${alunoExperimental.dataNascimentoFormatada}"></td>
+				<td th:text="${alunoExperimental.situacaoAlunoAulaExperimental}"></td>
+			</tr>
+		</table>
+
+
+		<table class="container table-responsive table">
+		<caption>Tabela de alunos pré-cadastro</caption>
+			<tr>
+				<th>Pré-Cadastro</th>
+			</tr>
+			<tr>
+				<th>Aluno</th>
+				<th>E-mail</th>
+				<th>Data de Nascimento</th>
+				<th>Situacao</th>
+			</tr>
+			<tr th:each="alunoPre : ${alunosPreCadastro}">
+				<td><a
+					th:href="@{/professor/cadastro/aluno/{id}(id=${alunoPre.id})}"
+					th:text="${alunoPre.nome}"></a></td>
+				<td th:text="${alunoPre.email}"></td>
+				<td th:text="${alunoPre.dataNascimentoFormatada}"></td>
+				<td th:text="${alunoPre.situacaoPreCadastro}"></td>
+			</tr>
+		</table>
+
+		<!--Rodapé - Início-->
+		<footer th:insert="~{footer-vazia :: footer}"></footer>
+	</div>
+	</div>
+</body>
+
+</html>

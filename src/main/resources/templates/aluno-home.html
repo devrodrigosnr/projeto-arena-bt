@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<body>
+	<div layout:fragment="content">
+	<div th:replace="~{navbar-aluno}"></div>
+	
+	<div>
+		<label>Aulas já realizadas no mês:</label>
+		<span th:text="${qtdAulasRealizadasMes}"></span>
+	</div>
+
+
+
+    <!--Rodapé - Início-->
+    <footer>
+        <!-- Seu conteúdo do footer aqui -->
+        <div id="divIconesFooter"></div>
+        </div>
+    </footer>
+</body>
+
+</html>
